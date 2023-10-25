@@ -9,47 +9,41 @@ print("------------"
       "------------")
 
 # Variables for house colours
-colours = Ints('Yellow Blue Red Ivory Green')
+Yellow, Blue, Red, Ivory, Green = Ints('Yellow Blue Red Ivory Green')
 # Variables for nationalities
-nationalities = Ints('Norwegian Ukrainian Englishman Spaniard Japanese')
+Norwegian, Ukrainian, Englishman, Spaniard, Japanese = Ints('Norwegian Ukrainian Englishman Spaniard Japanese')
 # Variables for drinks
-drinks = Ints('Water Tea Milk OrangeJuice Coffee')
+Water, Tea, Milk, OrangeJuice, Coffee = Ints('Water Tea Milk OrangeJuice Coffee')
 # Variables for sweets
-sweets = Ints('BarOnes KitsKats KrispyKremes ThinMints MMs')
+BarOnes, KitKats, KrispyKremes, ThinMints, MMs = Ints('BarOnes KitsKats KrispyKremes ThinMints MMs')
 # Variables for pets
-pets = Ints('Fox Horse Snails Dog Crocodile')
+Fox, Horse, Snails, Dog, Crocodile = Ints('Fox Horse Snails Dog Crocodile')
 
 # Create the Z3 solver
 s = Solver()
 
 # House colours are distinct
-s.add(Distinct(colours))
+s.add(Distinct([Yellow, Blue, Red, Ivory, Green]))
 # Nationalities are distinct
-s.add(Distinct(nationalities))
+s.add(Distinct([Norwegian, Ukrainian, Englishman, Spaniard, Japanese]))
 # Drinks are distinct
-s.add(Distinct(drinks))
+s.add(Distinct([Water, Tea, Milk, OrangeJuice, Coffee]))
 # Sweets are distinct
-s.add(Distinct(sweets))
+s.add(Distinct([BarOnes, KitKats, KrispyKremes, ThinMints, MMs]))
 # Pets are distinct
-s.add(Distinct(pets))
+s.add(Distinct([Fox, Horse, Snails, Dog, Crocodile]))
 
 # Constrain all variables to be between 0 and 4, both inclusive
-for colour in colours:
+for colour in [Yellow, Blue, Red, Ivory, Green]:
     s.add(0 <= colour, colour <= 4)
-for nationality in nationalities:
+for nationality in [Norwegian, Ukrainian, Englishman, Spaniard, Japanese]:
     s.add(0 <= nationality, nationality <= 4)
-for drink in drinks:
+for drink in [Water, Tea, Milk, OrangeJuice, Coffee]:
     s.add(0 <= drink, drink <= 4)
-for sweet in sweets:
+for sweet in [BarOnes, KitKats, KrispyKremes, ThinMints, MMs]:
     s.add(0 <= sweet, sweet <= 4)
-for pet in pets:
+for pet in [Fox, Horse, Snails, Dog, Crocodile]:
     s.add(0 <= pet, pet <= 4)
-
-Yellow, Blue, Red, Ivory, Green = colours
-Norwegian, Ukrainian, Englishman, Spaniard, Japanese = nationalities
-Water, Tea, Milk, OrangeJuice, Coffee = drinks
-BarOnes, KitKats, KrispyKremes, ThinMints, MMs = sweets
-Fox, Horse, Snails, Dog, Crocodile = pets
 
 # The Englishman lives in the red house.
 s.add(Englishman == Red)
@@ -82,64 +76,77 @@ s.add(Or(Norwegian == Blue + 1, Norwegian == Blue - 1))
 
 # Solve the problem
 r = s.check()
-print(r)
 if r == unsat:
     exit(0)
-m = s.model()
+else:
+    # Print the solution
+    colours = {}
+    nationalities = {}
+    drinks = {}
+    sweets = {}
+    pets = {}
 
-# Print the solution
-print(m)
+    m = s.model()
+    for d in m.decls():
+        idx = m[d].as_long()
+        if d.name() in ["Yellow", "Blue", "Red", "Ivory", "Green"]:
+            colours[idx] = d.name()
+        elif d.name() in ["Norwegian", "Ukrainian", "Englishman", "Spaniard", "Japanese"]:
+            nationalities[idx] = d.name()
+        elif d.name() in ["Water", "Tea", "Milk", "OrangeJuice", "Coffee"]:
+            drinks[idx] = d.name()
+        elif d.name() in ["BarOnes", "KitsKats", "KrispyKremes", "ThinMints", "MMs"]:
+            sweets[idx] = d.name()
+        elif d.name() in ["Fox", "Horse", "Snails", "Dog", "Crocodile"]:
+            pets[idx] = d.name()
+    for i in range(5):
+        print(f"The {nationalities[i]} lives in the {colours[i]} house, eats "
+              f"{sweets[i]}, drinks {drinks[i]}, and owns a {pets[i]}.")
 
 """
 Second Puzzle: Ships
 """
 
-print("-------------"
+print("\n-------------"
       "Second Puzzle"
       "-------------")
 
 # Variables for nationalities
-nationalities = Ints('French Greek Brazilian English Spanish')
+French, Greek, Brazilian, English, Spanish = Ints('French Greek Brazilian English Spanish')
 # Variables for departure times
-depart_times = Ints('Five Six Seven Eight Nine')
+Five, Six, Seven, Eight, Nine = Ints('Five Six Seven Eight Nine')
 # Variables for exterior colours
-colours = Ints('Blue Black Red Green White')
+Blue, Black, Red, Green, White = Ints('Blue Black Red Green White')
 # Variables for cargo
-cargoes = Ints('Tea Coffee Cocoa Rice Corn')
+Tea, Coffee, Cocoa, Rice, Corn = Ints('Tea Coffee Cocoa Rice Corn')
 # Variables for destinations
-destinations = Ints('PortSaid Marseille Manila Genoa Hamburg')
+PortSaid, Marseille, Manila, Genoa, Hamburg = Ints('PortSaid Marseille Manila Genoa Hamburg')
 
 # Create the Z3 solver
 s = Solver()
 
 # Nationalities are distinct
-s.add(Distinct(nationalities))
+s.add(Distinct([French, Greek, Brazilian, English, Spanish]))
 # Departure time are distinct
-s.add(Distinct(depart_times))
+s.add(Distinct([Five, Six, Seven, Eight, Nine]))
 # Exterior colours are distinct
-s.add(Distinct(colours))
+s.add(Distinct([Blue, Black, Red, Green, White]))
 # Cargoes are distinct
-s.add(Distinct(cargoes))
+s.add(Distinct([Tea, Coffee, Cocoa, Rice, Corn]))
 # Destinations are distinct
-s.add(Distinct(destinations))
+s.add(Distinct([PortSaid, Marseille, Manila, Genoa, Hamburg]))
 
 # Constrain all variables to be between 0 and 4, both inclusive
-for nationality in nationalities:
+for nationality in [French, Greek, Brazilian, English, Spanish]:
     s.add(0 <= nationality, nationality <= 4)
-for time in depart_times:
+for time in [Five, Six, Seven, Eight, Nine]:
     s.add(0 <= time, time <= 4)
-for colour in colours:
+for colour in [Blue, Black, Red, Green, White]:
     s.add(0 <= colour, colour <= 4)
-for cargo in cargoes:
+for cargo in [Tea, Coffee, Cocoa, Rice, Corn]:
     s.add(0 <= cargo, cargo <= 4)
-for destination in destinations:
+for destination in [PortSaid, Marseille, Manila, Genoa, Hamburg]:
     s.add(0 <= destination, destination <= 4)
-
-French, Greek, Brazilian, English, Spanish = nationalities
-Five, Six, Seven, Eight, Nine = depart_times
-Blue, Black, Red, Green, White = colours
-Tea, Coffee, Cocoa, Rice, Corn = cargoes
-PortSaid, Marseille, Manila, Genoa, Hamburg = destinations
 
 # The Greek ship leaves at six and carries coffee.
 s.add(Greek == Six)
@@ -179,10 +186,29 @@ s.add(Hamburg == Six)
 
 # Solve the puzzle
 r = s.check()
-print(r)
 if r == unsat:
     exit(0)
-m = s.model()
+else:
+    # Print the solution
+    nationalities = {}
+    depart_times = {}
+    colours = {}
+    cargoes = {}
+    destinations = {}
 
-# Print the solution
-print(m)
+    m = s.model()
+    for d in m.decls():
+        idx = m[d].as_long()
+        if d.name() in ["French", "Greek", "Brazilian", "English", "Spanish"]:
+            nationalities[idx] = d.name()
+        elif d.name() in ["Five", "Six", "Seven", "Eight", "Nine"]:
+            depart_times[idx] = d.name()
+        elif d.name() in ["Blue", "Black", "Red", "Green", "White"]:
+            colours[idx] = d.name()
+        elif d.name() in ["Tea", "Coffee", "Cocoa", "Rice", "Corn"]:
+            cargoes[idx] = d.name()
+        elif d.name() in ["PortSaid", "Marseille", "Manila", "Genoa", "Hamburg"]:
+            destinations[idx] = d.name()
+    for i in range(5):
+        print(f"The {colours[i]} {nationalities[i]} ship leaves at "
+              f"{depart_times[i]}, carrying {cargoes[i]} to {destinations[i]}.")
